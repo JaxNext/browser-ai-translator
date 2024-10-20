@@ -3,6 +3,7 @@ import NotSupport from '@/components/NotSupport.vue'
 import DarkMode from '@/components/DarkMode.vue'
 import Translator from '@/components/Translator.vue'
 import { ref } from 'vue'
+import Toaster from '@/components/ui/toast/Toaster.vue'
 
 const isSupport = ref(true)
 </script>
@@ -14,4 +15,5 @@ const isSupport = ref(true)
     <Translator v-if="isSupport" />
     <NotSupport v-else />
   </div>
+  <Toaster />
 </template>

@@ -3,15 +3,12 @@
   <div class="mt-4 flex gap-4 h-[calc(100vh-100px)]">
     <Card class="w-1/2">
       <CardContent>
-        <div class="flex gap-4 mt-2">
-          <Input
-            :value="sourceTypeText"
-            readonly
-            placeholder="输入文字后自动检测语种"
-            class="w-[200px]"
-          />
-          <div class="text-sm dark:text-slate-500">{{ sourceTip }}</div>
-        </div>
+        <Input
+          v-model="sourceTypeText"
+          readonly
+          placeholder="输入文字后自动检测语种"
+          class="w-[200px] mt-4"
+        />
         <Textarea
           v-model="sourceText"
           class="mt-4 h-[calc(100vh-190px)]"
@@ -48,6 +45,9 @@ import {
   translate,
   updateTranslator,
 } from '@rejax/browser-ai-translator' // @ts-ignore
+import { useToast } from '@/components/ui/toast/use-toast'
+
+const { toast } = useToast()
 
 // 语言标签名称
 const langTagNames = ref(new Intl.DisplayNames(['zh'], { type: 'language' }))
@@ -55,13 +55,12 @@ const langList = computed(() => supportLangs.map(item => ({ value: item, label: 
 // 目前 API 支持的语种
 const supportLangs = ['es', 'en', 'ja', 'zh', 'ar', 'bn', 'de', 'fr', 'hi', 'it', 'ko', 'nl', 'pl', 'pt', 'ru', 'th', 'tr', 'vi', 'zh-Hant']
 
-const sourceType = ref('en')
+const sourceType = ref('')
 const sourceTypeText = computed(() => {
   if (!sourceType.value) return ''
   return langTagNames.value.of(sourceType.value)
 })
 const sourceText = ref('')
-const sourceTip = ref('')
 let timer: NodeJS.Timeout | null = null
 async function inputSourceText() {
   if (timer) clearTimeout(timer)
@@ -80,7 +79,11 @@ async function inputSourceText() {
 }
 
 const targetText = ref('')
-const targetType = ref('es')
+const targetType = ref('zh')
+const targetTypeText = computed(() => {
+  if (!targetType.value) return ''
+  return langTagNames.value.of(targetType.value)
+})
 async function changeTargetLang() {
   if (!sourceText.value || targetType.value === sourceType.value) {
     targetText.value = sourceText.value
@@ -91,24 +94,33 @@ async function changeTargetLang() {
     targetLanguage: targetType.value,
   }
   // 更新 Translator
-  await updateTranslator(pair)
-  // 翻译
-  await doTranslate()
+  try {
+    await updateTranslator(pair)
+    // 翻译
+    await doTranslate()
+  } catch (error) {
+    console.error('111', error)
+    showToast(error.message)
+  }
 }
 
 // 翻译
 async function doTranslate() {
-  targetText.value = await translate({
-    text: sourceText.value,
+  try {
+    targetText.value = await translate({
+      text: sourceText.value,
     sourceLanguage: sourceType.value,
-    targetLanguage: targetType.value,
-  })
+      targetLanguage: targetType.value,
+    })
+  } catch (error) {
+    console.error('222', error)
+    showToast(error.message)
+  }
 }
 
 // 检测用户输入的文本语种
 async function detectSourceLang() {
   if (!sourceText.value) {
-    sourceTip.value = ''
     sourceType.value = ''
     return
   }
@@ -116,11 +128,15 @@ async function detectSourceLang() {
   const { value } = res
   sourceType.value = value
   if (!supportLangs.includes(value)) {
-    sourceTip.value = '暂不支持该语种'
+    showToast('暂不支持该语种')
     targetText.value = ''
-  } else {
-    sourceTip.value = ''
   }
 }
 
+function showToast(msg: string) {
+  toast({
+    description: `当前语种不支持「${sourceTypeText.value}」→「${targetTypeText.value}」`,
+    variant: 'destructive',
+  })
+}
 </script>
