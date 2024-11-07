@@ -21,7 +21,7 @@ export default defineConfig({
     },
   },
   build: {
-    outDir: 'chrome-ai-translator',
+    outDir: 'translator',
     rollupOptions: {
       output: {
         sanitizeFileName(name) {
