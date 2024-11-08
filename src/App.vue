@@ -4,7 +4,7 @@ import DarkMode from '@/components/DarkMode.vue'
 import Translator from '@/components/Translator.vue'
 import { ref, onMounted } from 'vue'
 import Toaster from '@/components/ui/toast/Toaster.vue'
-import { checkDetectorUsability, checkTranslatorUsability } from '@rejax/browser-ai-translator'
+import { checkDetectorUsability, checkTranslatorUsability } from '@rejax/browser-ai'
 
 const isSupport = ref(false)
 

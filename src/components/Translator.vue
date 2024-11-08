@@ -44,7 +44,7 @@ import {
   detect,
   translate,
   updateTranslator,
-} from '@rejax/browser-ai-translator' // @ts-ignore
+} from '@rejax/browser-ai'
 import { useToast } from '@/components/ui/toast/use-toast'
 
 const { toast } = useToast()
