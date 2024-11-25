@@ -39,13 +39,18 @@ import {
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import LangSelector from '@/components/LangSelector.vue'
-import { ref, computed } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import {
   detect,
   translate,
   updateTranslator,
+  setOriginTrialToken,
 } from '@rejax/browser-ai'
 import { useToast } from '@/components/ui/toast/use-toast'
+import {
+  DETECT_ORIGIN_TRIAL_TOKEN,
+  TRANSLATOR_TRIAL_TOKEN,
+} from '@/constants/trial'
 
 const { toast } = useToast()
 
@@ -139,4 +144,9 @@ function showToast(msg: string) {
     variant: 'destructive',
   })
 }
+
+onMounted(() => {
+  setOriginTrialToken(DETECT_ORIGIN_TRIAL_TOKEN)
+  setOriginTrialToken(TRANSLATOR_TRIAL_TOKEN)
+})
 </script>
