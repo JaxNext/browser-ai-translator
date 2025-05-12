@@ -4,13 +4,13 @@ import DarkMode from '@/components/DarkMode.vue'
 import Translator from '@/components/Translator.vue'
 import { ref, onMounted } from 'vue'
 import Toaster from '@/components/ui/toast/Toaster.vue'
-import { checkDetectorUsability, checkTranslatorUsability } from '@rejax/browser-ai'
+import { checkDetectorAvailability, checkTranslatorAvailability } from '@rejax/browser-ai'
 
 const isSupport = ref(false)
 
 onMounted(async () => {
-  const canDetect = await checkDetectorUsability()
-  const canTranslate = await checkTranslatorUsability({
+  const canDetect = await checkDetectorAvailability()
+  const canTranslate = await checkTranslatorAvailability({
     sourceLanguage: 'en',
     targetLanguage: 'zh',
   })

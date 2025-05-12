@@ -43,8 +43,9 @@ import { ref, computed, onMounted } from 'vue'
 import {
   detect,
   translate,
-  updateTranslator,
   setOriginTrialToken,
+  updateTranslator,
+  checkTranslatorAvailability,
 } from '@rejax/browser-ai'
 import { useToast } from '@/components/ui/toast/use-toast'
 import {
